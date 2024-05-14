@@ -1,0 +1,82 @@
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        string baglanti = "Server=localhost;Database=sinema_veritabani;Uid=root;Pwd=' ' ";
+        string hedefDosya = " ";
+        DataTable dt;
+        private void VeriGetir()
+        {
+            using(MySqlConnection con=new MySqlConnection(baglanti))
+            {
+                string sql = "SELECT*FROM filmler";
+                con.Open();
+                MySqlCommand cmd = new MySqlCommand(sql, con);
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                dt=new DataTable();
+                da.Fill(dt);
+
+                dgvListe.DataSource = dt;
+                dgvListe.Invalidate();
+                dgvListe.Refresh();
+
+            }
+
+        }
+
+        void ResimSec()
+        {
+            OpenFileDialog dosya = new OpenFileDialog();
+            dosya.Filter="Resim Dosyası|*.jpg;*.nef;*.png|Video|*.avi|Tüm Dosyalar|*.*' '";
+            dosya.Title = "10-A NTP";
+            if(dosya.ShowDialog() == DialogResult.OK)
+            {
+                string kaynakDosya=dosya.FileName;
+                hedefDosya=Path.Combine("resimler",Guid.NewGuid()+" .jpg");
+                if (!Directory.Exists("resimler"))
+                {
+                    Directory.CreateDirectory("resimler");  
+                }
+                File.Copy(kaynakDosya, hedefDosya);
+
+            }
+        }
+
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            VeriGetir();
+        }
+
+        private void dgvListe_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            lblFilmAdi.Text = dgvListe.CurrentRow.Cells["filmad"].Value.ToString();
+            lblTur.Text = dgvListe.CurrentRow.Cells["tur"].Value.ToString();
+            lblYil.Text = dgvListe.CurrentRow.Cells["yil"].Value.ToString();
+            lblImdb.Text = dgvListe.CurrentRow.Cells["imdb_puan"].Value.ToString();
+            txtOzet.Text = dgvListe.CurrentRow.Cells["ozet"].Value.ToString();
+        }
+
+        private void btnEklePoster_Click(object sender, EventArgs e)
+        {
+            ResimSec();
+            pbEklePosterSec.ImageLocation = hedefDosya;
+            pbEklePosterSec.SizeMode = PictureBoxSizeMode.StretchImage;
+        }
+
+        private void btnEkleKaydet_Click(object sender, EventArgs e)
+        {
+            using(MySqlConnection con = new MySqlConnection  )
+            {
+                string sql="INSERT INTO filmler("
+                
+
+
+
+
+
+            }
+        }
+    }
